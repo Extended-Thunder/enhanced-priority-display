@@ -6,15 +6,15 @@
     "default_locale": "en-US",
     "homepage_url": "https://addons.thunderbird.net/thunderbird/addon/enhanced-priority-display/",
         "options_ui": {
-            "page": "content/options.html",
+            "page": "ui/options.html",
             "open_in_tab": true
         },
         "experiment_apis":{
             "ep_display":{
-                "schema":"schema.json",
+                "schema":"experiments/schema.json",
                 "parent":{
                     "scopes":["addon_parent"],
-                    "script":"content/background-implementation.js",
+                    "script":"experiments/implementation.js",
                     "paths":[["ep_display"]]
                 }
             }
