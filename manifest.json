@@ -6,7 +6,7 @@
     "default_locale": "en-US",
     "homepage_url": "https://addons.thunderbird.net/thunderbird/addon/enhanced-priority-display/",
         "options_ui": {
-            "page": "/content/options.html",
+            "page": "content/options.html",
             "open_in_tab": true
         },
         "experiment_apis":{
