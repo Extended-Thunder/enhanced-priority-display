@@ -10,20 +10,12 @@
             "open_in_tab": true
         },
         "experiment_apis":{
-            "epd_optAPI":{
-                "schema":"schema.json",
-                "parent":{
-                    "scopes":["addon_parent"],
-                    "script":"content/options-implementation.js",
-                    "paths":[["epd_optAPI"]]
-                }
-            },
-            "epd_bgrndAPI":{
+            "ep_display":{
                 "schema":"schema.json",
                 "parent":{
                     "scopes":["addon_parent"],
                     "script":"content/background-implementation.js",
-                    "paths":[["epd_bgrndAPI"]]
+                    "paths":[["ep_display"]]
                 }
             }
         },

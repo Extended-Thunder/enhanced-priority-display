@@ -1,85 +1,84 @@
-var { ExtensionCommon } = ChromeUtils.import(
-  "resource://gre/modules/ExtensionCommon.jsm"
-);
-var { ExtensionParent } = ChromeUtils.import(
-  "resource://gre/modules/ExtensionParent.jsm"
-);
+const { utils: Cu, classes: Cc, interfaces: Ci } = Components;
+const { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
+const { ExtensionSupport } = ChromeUtils.import("resource:///modules/ExtensionSupport.jsm");
+const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-//var {Log4Moz} = ChromeUtils.import("resource:///modules/gloda/log4moz.js");
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-//var {Log4Moz} = ChromeUtils.import("resource:///modules/gloda/log4moz.js");
-
-var extension = ExtensionParent.GlobalManager.getExtension(
-  "EnhancedPriorityDisplay@kamens.us"
-);
-var { ExtensionSupport } = ChromeUtils.import(
-  "resource:///modules/ExtensionSupport.jsm"
-);
-var idPrefix = "EnhancedPriorityDisplay-";
-let window = Services.wm.getMostRecentWindow("mail:3pane");
-
-var epd_bgrndAPI = class extends ExtensionCommon.ExtensionAPI {
+var ep_display = class extends ExtensionCommon.ExtensionAPI {
   getAPI(context) {
     return {
-      epd_bgrndAPI: {
-        Epdicons_apply: function () {
+      ep_display: {
+        async init() {
           try {
-            enhancedPriorityDisplayIcons(context);
+            enhancedPriorityDisplayIcons(context.extension);
           } catch (exception) {
             console.error(exception);
           }
         },
+        async getLegacyPref(name, dtype, defVal) {
+          let prefDefault = defVal;
+          let getter;
+          Services.prefs.getLegacyPref
+
+          switch (dtype) {
+            case "bool": {
+              prefDefault = (defVal === "true");
+              getter = Services.prefs.getBoolPref;
+              break;
+            }
+            case "int": {
+              prefDefault = (Number(defVal) | 0);
+              getter = Services.prefs.getIntPref;
+              break;
+            }
+            case "char": {
+              getter = Services.prefs.getCharPref;
+              break;
+            }
+            case "string": {
+              getter = Services.prefs.getStringPref;
+              break;
+            }
+            default: {
+              throw new Error("Unexpected pref type");
+            }
+          }
+
+          try {
+            const prefName = `extensions.EnhancedPriorityDisplay.${name}`;
+            return getter(prefName, prefDefault);
+          } catch (err) {
+            console.error(err);
+            return prefDefault;
+          }
+        }
       },
     };
   }
 };
 
-function enhancedPriorityDisplayIcons(context) {
-  let { extension } = context;
-  // Current Thunderbird nightly builds do not load default preferences
-  // from overlay add-ons. They're probably going to fix this, but it may go
-  // away again at some point in the future, and in any case we'll need to do
-  // it ourselves when we convert from overlay to bootstrapped, and there
-  // shouldn't be any harm in setting the default values of preferences twice
-  // (i.e., both Thunderbird and our code doing it).
+function enhancedPriorityDisplayIcons(extension) {
+
   var { DefaultPreferencesLoader } = ChromeUtils.import(
     extension.rootURI.resolve("content/defaultPreferencesLoader.js")
   );
   var loader = new DefaultPreferencesLoader();
   loader.parseUri(extension.rootURI.resolve("prefs.jsm"));
-  var oldColumnHandler;
-  /* var logger = Log4Moz
-	.getConfiguredLogger("extensions.EnhancedPriorityDisplay",
-			     Log4Moz.Level.Trace,
-			     Log4Moz.Level.Info,
-			     Log4Moz.Level.Debug);*/
-  var prefService = Components.classes[
-    "@mozilla.org/preferences-service;1"
-  ].getService(Components.interfaces.nsIPrefBranch);
 
   function gCP(pref) {
-    return prefService.getCharPref(
-      "extensions.EnhancedPriorityDisplay." + pref
-    );
+    pref = `extensions.EnhancedPriorityDisplay.${pref}`;
+    return Services.prefs.getCharPref(pref);
   }
 
   function gBP(pref) {
-    return prefService.getBoolPref(
-      "extensions.EnhancedPriorityDisplay." + pref
-    );
+    pref = `extensions.EnhancedPriorityDisplay.${pref}`;
+    return Services.prefs.getBoolPref(pref);
   }
 
   function priorityIconsOnLoad() {
-    var ObserverService = Components.classes[
-      "@mozilla.org/observer-service;1"
-    ].getService(Components.interfaces.nsIObserverService);
-    ObserverService.addObserver(createDbObserver, "MsgCreateDBView", false);
-
-    console.log("called from priorityIconsOnLoad");
+    Services.obs.addObserver(createDbObserver, "MsgCreateDBView", false);
+    // console.log("called from priorityIconsOnLoad");
   }
-  var observer = function () {
-    priorityIconsOnLoad();
-  };
+
   function createGenericHandler(colId, oldHandler) {
     if (window.gDBView) {
       var tree = window.document.getElementById("threadTree");
@@ -359,9 +358,6 @@ function enhancedPriorityDisplayIcons(context) {
       }
     },
   };
-  //Services.obs.addObserver(observer, "load", false);
-  // window.addEventListener("load", priorityIconsOnLoad, false);
-  // window.addEventListener("unload", priorityIconsOnUnload, false);
 
   ExtensionSupport.registerWindowListener("epdWindowListener", {
     chromeURLs: [
