@@ -158,13 +158,6 @@
     "functions":
     [
         {
-            "name":"IconsOnLoad",
-            "type":"function",
-            "desription":"onlod function",
-            "async":true,
-            "parameters":[]
-        },
-        {
             "name":"Epdicons_apply",
             "type":"function",
             "desription":"apply the variable",
