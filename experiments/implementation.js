@@ -2,14 +2,25 @@ const { utils: Cu, classes: Cc, interfaces: Ci } = Components;
 const { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
 const { ExtensionSupport } = ChromeUtils.import("resource:///modules/ExtensionSupport.jsm");
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { AddonManager } = ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
 
 var ep_display = class extends ExtensionCommon.ExtensionAPI {
   getAPI(context) {
+    context.callOnClose(this);
+
     return {
       ep_display: {
         async init() {
           try {
-            enhancedPriorityDisplayIcons(context.extension);
+            ExtensionSupport.registerWindowListener("epdWindowListener", {
+              chromeURLs: [
+                "chrome://messenger/content/messenger.xhtml",
+                "chrome://messenger/content/messenger.xul",
+              ],
+              onLoadWindow(window) {
+                EnhancedPriorityDisplay(context, window);
+              },
+            });
           } catch (exception) {
             console.error(exception);
           }
@@ -54,30 +65,24 @@ var ep_display = class extends ExtensionCommon.ExtensionAPI {
       },
     };
   }
+
+  close() {
+    console.info("ep_display.close: Beginning close function.");
+    // Stop listening for new message compose windows.
+    try {
+      ExtensionSupport.unregisterWindowListener("epdWindowListener");
+    } catch (err) {
+      console.warn(`Could not deregister listener <epdWindowListener>`,err);
+    }
+
+    // Invalidate the cache to ensure we start clean if extension is reloaded.
+    Services.obs.notifyObservers(null, "startupcache-invalidate", null);
+
+    console.info("ep_display.close: Extension removed. Goodbye world.");
+  }
 };
 
-function enhancedPriorityDisplayIcons(extension) {
-
-  var { DefaultPreferencesLoader } = ChromeUtils.import(
-    extension.rootURI.resolve("content/defaultPreferencesLoader.js")
-  );
-  var loader = new DefaultPreferencesLoader();
-  loader.parseUri(extension.rootURI.resolve("prefs.jsm"));
-
-  function gCP(pref) {
-    pref = `extensions.EnhancedPriorityDisplay.${pref}`;
-    return Services.prefs.getCharPref(pref);
-  }
-
-  function gBP(pref) {
-    pref = `extensions.EnhancedPriorityDisplay.${pref}`;
-    return Services.prefs.getBoolPref(pref);
-  }
-
-  function priorityIconsOnLoad() {
-    Services.obs.addObserver(createDbObserver, "MsgCreateDBView", false);
-    // console.log("called from priorityIconsOnLoad");
-  }
+function EnhancedPriorityDisplay(context, window) {
 
   function createGenericHandler(colId, oldHandler) {
     if (window.gDBView) {
@@ -150,7 +155,7 @@ function enhancedPriorityDisplayIcons(extension) {
           }
           if (property) properties += this.setProperty(props, property);
 
-          console.log(properties);
+          console.log(which, doHigh, doLow, priority, props, property, properties);
           return properties;
         },
 
@@ -195,12 +200,10 @@ function enhancedPriorityDisplayIcons(extension) {
     }
   }
 
-  var createDbObserver = {
+  const dbObserver = {
     // Components.interfaces.nsIObserver
     observe: function (aMsgFolder, aTopic, aData) {
-      console.log("called from observe");
       if (window.gDBView) {
-        console.log("window.gDBView-------------true");
         var tree = window.document.getElementById("threadTree");
         var columnHandler = {
           getCellText: function (row, col) {
@@ -246,7 +249,6 @@ function enhancedPriorityDisplayIcons(extension) {
           },
 
           getExtensionProperties: function (row, props, which) {
-            console.log("called from getExtensionProperties");
             var properties = "";
             var hdr = window.gDBView.getMsgHdrAt(row);
             var priority = hdr.getStringProperty("priority");
@@ -297,7 +299,6 @@ function enhancedPriorityDisplayIcons(extension) {
           },
 
           getImageSrc: function (row, col) {
-            console.log("called from getExtensionProperties");
             if (!gBP("Iconify")) return null;
             try {
               var hdr = window.gDBView.getMsgHdrAt(row);
@@ -333,7 +334,6 @@ function enhancedPriorityDisplayIcons(extension) {
         } catch (ex) {}
         window.gDBView.addColumnHandler("priorityCol", columnHandler);
         var threadCols = window.document.getElementById("threadCols");
-        console.log(threadCols);
         if (!threadCols) return;
         var columns = threadCols.getElementsByTagName("treecol");
         if (!columns) return;
@@ -359,13 +359,59 @@ function enhancedPriorityDisplayIcons(extension) {
     },
   };
 
-  ExtensionSupport.registerWindowListener("epdWindowListener", {
-    chromeURLs: [
-      "chrome://messenger/content/messenger.xhtml",
-      "chrome://messenger/content/messenger.xul",
-    ],
-    onLoadWindow(/*window*/) {
-      priorityIconsOnLoad();
+  let preferences = {};
+
+  function gCP(pref) {
+    return preferences[pref];
+  }
+
+  function gBP(pref) {
+    return preferences[pref];
+  }
+
+  const AddonListener = {
+    resetSession(addon, who) {
+      if (addon.id === "EnhancedPriorityDisplay@kamens.us") {
+        console.debug("AddonListener.resetSession: who - " + who);
+        if (window.gDBView) {
+          try {
+            window.gDBView.removeColumnHandler("priorityCol");
+          } catch (ex) { console.warn("Unable to remove priorityCol column handler", ex); }
+        }
+
+        try{
+          Services.obs.removeObserver(dbObserver, "MsgCreateDBView");
+        } catch (ex) { console.warn("Unable to remove msgcreatedbview observer", ex); }
+
+        try {
+          AddonManager.removeAddonListener(this);
+        } catch (ex) { console.warn("Unable to remove addon listener", ex); }
+      }
     },
-  });
+    onUninstalling(addon) {
+      this.resetSession(addon, "onUninstalling");
+    },
+    onDisabling(addon) {
+      this.resetSession(addon, "onDisabling");
+    },
+    // The listener is removed so these aren't run; they aren't needed as the
+    // addon is installed by the addon system and runs our backgound.js loader.
+    onInstalling(addon) {},
+    onEnabling(addon) {},
+    onOperationCancelled(addon) {},
+  };
+
+  async function onLoad(context) {
+    const storageAPI = context.apiCan.findAPIPath("storage.local");
+    const storage = await storageAPI.callMethodInParentProcess(
+        "get", [{ "preferences": {} }]
+      );
+    preferences = storage.preferences;
+
+    Services.obs.addObserver(dbObserver, "MsgCreateDBView", false);
+    AddonManager.addAddonListener(AddonListener);
+  }
+
+  onLoad(context);
+
 }

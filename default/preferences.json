@@ -4,10 +4,10 @@
   "StyleLow": ["bool", true, null],
   "ShadeHigh": ["bool", true, null],
   "ShadeLow": ["bool", true, null],
-  "HighestIcon": ["string", "content/highest.gif", null],
-  "HighIcon": ["string", "content/high.gif", null],
-  "LowIcon": ["string", "content/low.gif", null],
-  "LowestIcon": ["string", "content/lowest.gif", null],
+  "HighestIcon": ["string", "ui/graphics/highest.gif", null],
+  "HighIcon": ["string", "ui/graphics/high.gif", null],
+  "LowIcon": ["string", "ui/graphics/low.gif", null],
+  "LowestIcon": ["string", "ui/graphics/lowest.gif", null],
   "LogConsole": ["string", "Warn", "logging.console"],
   "LogDump": ["string", "Warn", "logging.dump"]
 }

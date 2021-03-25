@@ -1,4 +1,4 @@
-const EnhancedPriorityDisplay = {
+const EPD = {
   async migratePreferences() {
     const CURRENT_LEGACY_MIGRATION = 1;
 
@@ -58,7 +58,7 @@ const EnhancedPriorityDisplay = {
         }
       );
 
-      SLStatic.info(
+      console.info(
         "EnhancedPriorityDisplay: migrating legacy/default preferences."
       );
 
@@ -74,7 +74,7 @@ const EnhancedPriorityDisplay = {
     for (let prefName of Object.getOwnPropertyNames(prefDefaults)) {
       if (preferences[prefName] === undefined) {
         const prefValue = prefDefaults[prefName][1];
-        SLStatic.debug(`Added new preference ${prefName}: ${prefValue}`);
+        console.debug(`Added new preference ${prefName}: ${prefValue}`);
         preferences[prefName] = prefValue;
       }
     }
@@ -88,7 +88,7 @@ const EnhancedPriorityDisplay = {
 
   async init() {
     // Print version info
-    const extensionName = messenger.i18n.getMessage("extensionName");
+    const extensionName = messenger.i18n.getMessage("appName");
     const thisVersion = messenger.runtime.getManifest().version;
     const browserInfo = await messenger.runtime.getBrowserInfo();
     const platformInfo = await messenger.runtime.getPlatformInfo();
@@ -98,9 +98,11 @@ const EnhancedPriorityDisplay = {
         `[${platformInfo.os} ${platformInfo.arch}]`
     );
 
+    await this.migratePreferences();
+
     // Load extension
     messenger.ep_display.init();
   },
 };
 
-EnhancedPriorityDisplay.init();
+EPD.init();
