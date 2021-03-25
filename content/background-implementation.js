@@ -24,7 +24,9 @@ var epd_bgrndAPI = class extends ExtensionCommon.ExtensionAPI
                                 },
                                 Epdicons_apply:function()
                                 {
-                                    try{enhancedPriorityDisplayIcons.apply();}
+                                    try{
+										enhancedPriorityDisplayIcons(context);
+									}
                                     catch(exception){console.error(exception)}
                                 }
 
@@ -33,14 +35,15 @@ var epd_bgrndAPI = class extends ExtensionCommon.ExtensionAPI
         }
 };
 
-function enhancedPriorityDisplayIcons() {
+function enhancedPriorityDisplayIcons(context) {
+	let { extension } = context;
     // Current Thunderbird nightly builds do not load default preferences
     // from overlay add-ons. They're probably going to fix this, but it may go
     // away again at some point in the future, and in any case we'll need to do
     // it ourselves when we convert from overlay to bootstrapped, and there
     // shouldn't be any harm in setting the default values of preferences twice
     // (i.e., both Thunderbird and our code doing it).
-    var {DefaultPreferencesLoader} = ChromeUtils.import(extension.rootURI.resolve("/content/defaultPreferencesLoader.js"));
+    var {DefaultPreferencesLoader} = ChromeUtils.import(extension.rootURI.resolve("content/defaultPreferencesLoader.js"));
     var loader = new DefaultPreferencesLoader();
     loader.parseUri(extension.rootURI.resolve("prefs.jsm"));
     var oldColumnHandler;
@@ -365,7 +368,17 @@ function enhancedPriorityDisplayIcons() {
 	}
     };
 	//Services.obs.addObserver(observer, "load", false);
-    window.addEventListener("load", priorityIconsOnLoad, false);
+    // window.addEventListener("load", priorityIconsOnLoad, false);
     // window.addEventListener("unload", priorityIconsOnUnload, false);
+
+	ExtensionSupport.registerWindowListener("epdWindowListener", {
+		chromeURLs: [
+			"chrome://messenger/content/messenger.xhtml",
+			"chrome://messenger/content/messenger.xul",
+		],
+		onLoadWindow(/*window*/) {
+			priorityIconsOnLoad();
+		}
+	});
 };
 

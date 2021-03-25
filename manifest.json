@@ -14,7 +14,7 @@
                 "schema":"schema.json",
                 "parent":{
                     "scopes":["addon_parent"],
-                    "script":"/content/options-implementation.js",
+                    "script":"content/options-implementation.js",
                     "paths":[["epd_optAPI"]]
                 }
             },
@@ -22,7 +22,7 @@
                 "schema":"schema.json",
                 "parent":{
                     "scopes":["addon_parent"],
-                    "script":"/content/background-implementation.js",
+                    "script":"content/background-implementation.js",
                     "paths":[["epd_bgrndAPI"]]
                 }
             }
