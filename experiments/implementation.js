@@ -91,14 +91,17 @@ function EnhancedPriorityDisplay(context, window) {
         old: oldHandler,
 
         getCellText: function (row, col) {
-          if (columnHandler.old) return columnHandler.old.getCellText(row, col);
-          return window.gDBView.cellTextForColumn(row, colId);
+          if (columnHandler.old)
+            return columnHandler.old.getCellText(row, col);
+          else
+            return window.gDBView.cellTextForColumn(row, colId);
         },
 
         getSortStringForRow: function (hdr) {
           if (columnHandler.old)
             return columnHandler.old.getSortStringForRow(hdr);
-          return null;
+          else
+            return null;
         },
 
         isString: function () {
@@ -155,7 +158,7 @@ function EnhancedPriorityDisplay(context, window) {
           }
           if (property) properties += this.setProperty(props, property);
 
-          console.log(which, doHigh, doLow, priority, props, property, properties);
+          // console.log(which, doHigh, doLow, priority, props, property, properties);
           return properties;
         },
 
@@ -200,38 +203,43 @@ function EnhancedPriorityDisplay(context, window) {
     }
   }
 
-  const dbObserver = {
+  var createDbObserver = {
     // Components.interfaces.nsIObserver
     observe: function (aMsgFolder, aTopic, aData) {
       if (window.gDBView) {
         var tree = window.document.getElementById("threadTree");
         var columnHandler = {
           getCellText: function (row, col) {
-            if (gBP("Iconify")) return "";
-            return window.gDBView.cellTextForColumn(row, "priorityCol");
+            if (gBP("Iconify"))
+              return "";
+            else
+              return window.gDBView.cellTextForColumn(row, "priorityCol");
           },
 
           getSortStringForRow: function (hdr) {
             if (columnHandler.old)
               return columnHandler.old.getSortStringForRow(hdr);
-            return null;
+            else
+              return null;
           },
 
           isString: function () {
+            //console.debug("IsString? "+(!gBP("Iconify")) + " Has Atoms? " + this.hasAtoms);
             return !gBP("Iconify");
           },
 
           _atoms: {},
           hasAtoms: true,
           _getAtom: function (aName) {
-            if (!this.hasAtoms) return null;
+            if (!this.hasAtoms)
+              return null;
             if (!this._atoms[aName]) {
               try {
-                var as = Components.classes[
+                var as = Cc[
                   "@mozilla.org/atom-service;1"
-                ].getService(Components.interfaces.nsIAtomService);
+                ].getService(Ci.nsIAtomService);
               } catch (ex) {
-                hasAtoms = false;
+                this.hasAtoms = false;
                 return null;
               }
               this._atoms[aName] = as.getAtom(aName);
@@ -299,22 +307,25 @@ function EnhancedPriorityDisplay(context, window) {
           },
 
           getImageSrc: function (row, col) {
-            if (!gBP("Iconify")) return null;
+            if (!gBP("Iconify"))
+              return null;
             try {
               var hdr = window.gDBView.getMsgHdrAt(row);
             } catch (ex) {
+              console.warn("Cannot get header",ex);
               return null;
             }
             var priority = hdr.getStringProperty("priority");
             switch (priority) {
               case "6":
-                return gCP("HighestIcon");
+                return getPrefURL("HighestIcon");
               case "5":
-                return gCP("HighIcon");
+                return getPrefURL("HighIcon");
+              case "4":
               case "3":
-                return gCP("LowIcon");
+                return getPrefURL("LowIcon");
               case "2":
-                return gCP("LowestIcon");
+                return getPrefURL("LowestIcon");
               default:
                 if (columnHandler.old)
                   return columnHandler.old.getImageSrc(row, col);
@@ -361,26 +372,30 @@ function EnhancedPriorityDisplay(context, window) {
 
   let preferences = {};
 
-  function gCP(pref) {
+  function gBP(pref) {
     return preferences[pref];
   }
 
-  function gBP(pref) {
-    return preferences[pref];
+  function getPrefURL(pref) {
+    const relPath = preferences[pref];
+    return `moz-extension://${context.extension.uuid}/${relPath}`;
   }
 
   const AddonListener = {
     resetSession(addon, who) {
       if (addon.id === "EnhancedPriorityDisplay@kamens.us") {
         console.debug("AddonListener.resetSession: who - " + who);
+
         if (window.gDBView) {
           try {
             window.gDBView.removeColumnHandler("priorityCol");
-          } catch (ex) { console.warn("Unable to remove priorityCol column handler", ex); }
+          } catch (ex) {
+            console.warn("Unable to remove column handler: " + col, ex);
+          }
         }
 
         try{
-          Services.obs.removeObserver(dbObserver, "MsgCreateDBView");
+          Services.obs.removeObserver(createDbObserver, "MsgCreateDBView");
         } catch (ex) { console.warn("Unable to remove msgcreatedbview observer", ex); }
 
         try {
@@ -408,7 +423,14 @@ function EnhancedPriorityDisplay(context, window) {
       );
     preferences = storage.preferences;
 
-    Services.obs.addObserver(dbObserver, "MsgCreateDBView", false);
+    // This doesn't seem to work, but I'm not sure how
+    // to add css stylesheets to the root window.
+    window.document.appendChild(
+      window.MozXULElement.parseXULToFragment(
+        '<?xml-stylesheet href="ui/priority-display.css" type="text/css"?>'
+        ));
+
+    Services.obs.addObserver(createDbObserver, "MsgCreateDBView", false);
     AddonManager.addAddonListener(AddonListener);
   }
 

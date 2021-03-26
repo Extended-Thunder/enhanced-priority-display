@@ -29,7 +29,8 @@
 
   "web_accessible_resources": [
     "experiments/implementation.js",
-    "default/preferences.json"
+    "default/preferences.json",
+    "ui/graphics/*"
   ],
 
   "experiment_apis": {
