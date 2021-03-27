@@ -102,7 +102,8 @@ const EPD = {
 
     // Load extension
     messenger.ep_display.init();
-  },
+  }
 };
 
 EPD.init();
+

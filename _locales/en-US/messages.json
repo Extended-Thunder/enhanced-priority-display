@@ -20,11 +20,11 @@
         "description": ""
     },
     "shade-high-checkbox":{
-        "message": "Stripped background for high-priority messages",
+        "message": "Striped background for high-priority messages",
         "description": ""
     },
     "shade-low-checkbox":{
-        "message": "Stripped background for low-priority messages",
+        "message": "Striped background for low-priority messages",
         "description": ""
     },
     "highest-icon-textbox":{
@@ -52,7 +52,7 @@
         "description": ""
     },
     "copyright.label":{
-        "message": "Copyright &#xA9; 2012,2013,2015 Jonathan Kamens",
+        "message": "Copyright © 2012, 2013, 2015, 2021 Jonathan Kamens",
         "description":""
     },
 

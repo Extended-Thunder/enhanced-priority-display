@@ -84,288 +84,161 @@ var ep_display = class extends ExtensionCommon.ExtensionAPI {
 
 function EnhancedPriorityDisplay(context, window) {
 
-  function createGenericHandler(colId, oldHandler) {
-    if (window.gDBView) {
-      var tree = window.document.getElementById("threadTree");
-      var columnHandler = {
-        old: oldHandler,
+  function createColumnHandler(colId, oldHandler) {
+    if (!window.gDBView)
+      return;
 
-        getCellText: function (row, col) {
-          if (columnHandler.old)
-            return columnHandler.old.getCellText(row, col);
-          else
-            return window.gDBView.cellTextForColumn(row, colId);
-        },
+    const isPriorityCol = (colId === "priorityCol");
 
-        getSortStringForRow: function (hdr) {
-          if (columnHandler.old)
-            return columnHandler.old.getSortStringForRow(hdr);
-          else
-            return null;
-        },
+    const columnHandler = {
+      isEPDHandler: true,
 
-        isString: function () {
+      old: oldHandler,
+
+      getCellText(row, col) {
+        if (isPriorityCol && gBP("Iconify"))
+          return "";
+        else if (columnHandler.old)
+          return columnHandler.old.getCellText(row, col);
+        else
+          return window.gDBView.cellTextForColumn(row, colId);
+      },
+
+      getSortStringForRow(hdr) {
+        if (columnHandler.old)
+          return columnHandler.old.getSortStringForRow(hdr);
+        else
+          return null;
+      },
+
+      isString() {
+        if (isPriorityCol)
+          return !gBP("Iconify");
+        else if (columnHandler.old)
+          return columnHandler.old.isString();
+        else
           return true;
-        },
+      },
 
-        _atoms: {},
-        hasAtoms: true,
-        _getAtom: function (aName) {
-          if (!this.hasAtoms) return null;
-          if (!this._atoms[aName]) {
-            try {
-              var as = Components.classes[
-                "@mozilla.org/atom-service;1"
-              ].getService(Components.interfaces.nsIAtomService);
-            } catch (ex) {
-              this.hasAtoms = false;
-              return null;
-            }
-            this._atoms[aName] = as.getAtom(aName);
-          }
-          return this._atoms[aName];
-        },
+      getPriorityLevel(row) {
+        let hdr = window.gDBView.getMsgHdrAt(row);
+        let priority = hdr.getStringProperty("priority");
+        return priority;
+      },
 
-        setProperty: function (prop, value) {
-          if (prop) {
-            prop.AppendElement(this._getAtom(value));
-            return "";
-          } else {
-            return " " + value;
-          }
-        },
+      getSelector(row, which) {
+        var properties = "";
+        switch (columnHandler.getPriorityLevel(row)) {
+          case "6":
+            if (gBP(which + "High"))
+              properties = "enhanced-priority-display-highest";
+            break;
+          case "5":
+            if (gBP(which + "High"))
+              properties = "enhanced-priority-display-high";
+            break;
+          case "3":
+            if (gBP(which + "Low"))
+              properties = "enhanced-priority-display-low";
+            break;
+          case "2":
+            if (gBP(which + "Low"))
+              properties = "enhanced-priority-display-lowest";
+            break;
+        }
+        return properties;
+      },
 
-        getExtensionProperties: function (row, props, which) {
-          var properties = "";
-          var hdr = window.gDBView.getMsgHdrAt(row);
-          var priority = hdr.getStringProperty("priority");
-          var doHigh = gBP(which + "High");
-          var doLow = gBP(which + "Low");
-          var property;
-          switch (priority) {
+      getCellProperties(row, col, props) {
+        let properties = columnHandler.getSelector(row, "Style");
+        if (columnHandler.old) {
+          let oldProps = columnHandler.old.getCellProperties(row, col, props);
+          if (oldProps)
+            properties += (properties === "" ? "" : " ") + oldProps;
+        }
+        return properties;
+      },
+
+      getRowProperties(row, props) {
+        let properties = columnHandler.getSelector(row, "Shade");
+        if (columnHandler.old) {
+          let oldProps = columnHandler.old.getRowProperties(row, col, props);
+          if (oldProps)
+            properties += (properties === "" ? "" : " ") + oldProps;
+        }
+        return properties;
+      },
+
+      getImageSrc(row, col) {
+        if (isPriorityCol) {
+          if (!gBP("Iconify"))
+            return null;
+
+          switch (columnHandler.getPriorityLevel(row)) {
             case "6":
-              if (doHigh) property = "enhanced-priority-display-highest";
-              break;
+              return getPrefURL("HighestIcon");
             case "5":
-              if (doHigh) property = "enhanced-priority-display-high";
-              break;
+              return getPrefURL("HighIcon");
+            case "4":
             case "3":
-              if (doLow) property = "enhanced-priority-display-low";
-              break;
+              return getPrefURL("LowIcon");
             case "2":
-              if (doLow) property = "enhanced-priority-display-lowest";
-              break;
+              return getPrefURL("LowestIcon");
+            default:
+              if (columnHandler.old)
+                return columnHandler.old.getImageSrc(row, col);
+              return null;
           }
-          if (property) properties += this.setProperty(props, property);
-
-          // console.log(which, doHigh, doLow, priority, props, property, properties);
-          return properties;
-        },
-
-        getCellProperties: function (row, col, props) {
-          properties = columnHandler.getExtensionProperties(
-            row,
-            props,
-            "Style"
-          );
+        } else {
           if (columnHandler.old)
-            properties += columnHandler.old.getCellProperties(row, col, props);
-          return properties;
-        },
-
-        getRowProperties: function (row, props) {
-          if (tree.view.selection.isSelected(row)) {
-            return "";
-          }
-          properties = columnHandler.getExtensionProperties(
-            row,
-            props,
-            "Shade"
-          );
-          if (columnHandler.old)
-            properties += columnHandler.old.getRowProperties(row, props);
-          return properties;
-        },
-
-        getImageSrc: function (row, col) {
-          if (columnHandler.old) return columnHandler.old.getImageSrc(row, col);
+            return columnHandler.old.getImageSrc(row, col);
           return null;
-        },
+        }
+      },
 
-        getSortLongForRow: function (hdr) {
-          if (columnHandler.old)
-            return columnHandler.old.getSortLongForRow(hdr);
-          return null;
-        },
-      };
+      getSortLongForRow(hdr) {
+        if (columnHandler.old)
+          return columnHandler.old.getSortLongForRow(hdr);
+        return null;
+      },
+    };
 
-      window.gDBView.addColumnHandler(colId, columnHandler);
-    }
+    window.gDBView.addColumnHandler(colId, columnHandler);
   }
 
-  var createDbObserver = {
+  const dbObserver = {
     // Components.interfaces.nsIObserver
-    observe: function (aMsgFolder, aTopic, aData) {
-      if (window.gDBView) {
-        var tree = window.document.getElementById("threadTree");
-        var columnHandler = {
-          getCellText: function (row, col) {
-            if (gBP("Iconify"))
-              return "";
-            else
-              return window.gDBView.cellTextForColumn(row, "priorityCol");
-          },
+    observe(aMsgFolder, aTopic, aData) {
+      if (!window.gDBView)
+        return;
 
-          getSortStringForRow: function (hdr) {
-            if (columnHandler.old)
-              return columnHandler.old.getSortStringForRow(hdr);
-            else
-              return null;
-          },
+      let threadCols = window.document.getElementById("threadCols");
+      if (!threadCols)
+        return;
 
-          isString: function () {
-            //console.debug("IsString? "+(!gBP("Iconify")) + " Has Atoms? " + this.hasAtoms);
-            return !gBP("Iconify");
-          },
+      let columns = threadCols.getElementsByTagName("treecol");
+      if (!columns)
+        return;
 
-          _atoms: {},
-          hasAtoms: true,
-          _getAtom: function (aName) {
-            if (!this.hasAtoms)
-              return null;
-            if (!this._atoms[aName]) {
-              try {
-                var as = Cc[
-                  "@mozilla.org/atom-service;1"
-                ].getService(Ci.nsIAtomService);
-              } catch (ex) {
-                this.hasAtoms = false;
-                return null;
-              }
-              this._atoms[aName] = as.getAtom(aName);
-            }
-            return this._atoms[aName];
-          },
+      for (let column in columns) {
+        let id = columns[column].id;
+        if (!id)
+          continue;
 
-          setProperty: function (prop, value) {
-            if (prop) {
-              prop.AppendElement(this._getAtom(value));
-              return "";
-            } else {
-              return " " + value;
-            }
-          },
-
-          getExtensionProperties: function (row, props, which) {
-            var properties = "";
-            var hdr = window.gDBView.getMsgHdrAt(row);
-            var priority = hdr.getStringProperty("priority");
-            var doHigh = gBP(which + "High");
-            var doLow = gBP(which + "Low");
-            var property;
-            switch (priority) {
-              case "6":
-                if (doHigh) property = "enhanced-priority-display-highest";
-                break;
-              case "5":
-                if (doHigh) property = "enhanced-priority-display-high";
-                break;
-              case "3":
-                if (doLow) property = "enhanced-priority-display-low";
-                break;
-              case "2":
-                if (doLow) property = "enhanced-priority-display-lowest";
-                break;
-            }
-            if (property) properties += this.setProperty(props, property);
-            return properties;
-          },
-
-          getCellProperties: function (row, col, props) {
-            properties = columnHandler.getExtensionProperties(
-              row,
-              props,
-              "Style"
-            );
-            if (columnHandler.old)
-              properties += columnHandler.old.getCellProperties(row, props);
-            return properties;
-          },
-
-          getRowProperties: function (row, props) {
-            if (tree.view.selection.isSelected(row)) {
-              return "";
-            }
-            properties = columnHandler.getExtensionProperties(
-              row,
-              props,
-              "Shade"
-            );
-            if (columnHandler.old)
-              properties += columnHandler.old.getRowProperties(row, props);
-            return properties;
-          },
-
-          getImageSrc: function (row, col) {
-            if (!gBP("Iconify"))
-              return null;
-            try {
-              var hdr = window.gDBView.getMsgHdrAt(row);
-            } catch (ex) {
-              console.warn("Cannot get header",ex);
-              return null;
-            }
-            var priority = hdr.getStringProperty("priority");
-            switch (priority) {
-              case "6":
-                return getPrefURL("HighestIcon");
-              case "5":
-                return getPrefURL("HighIcon");
-              case "4":
-              case "3":
-                return getPrefURL("LowIcon");
-              case "2":
-                return getPrefURL("LowestIcon");
-              default:
-                if (columnHandler.old)
-                  return columnHandler.old.getImageSrc(row, col);
-                return null;
-            }
-          },
-
-          getSortLongForRow: function (hdr) {
-            if (columnHandler.old)
-              return columnHandler.old.getSortLongForRow(hdr);
-            return null;
-          },
-        };
-
+        let handler;
         try {
-          columnHandler.old = window.gDBView.getColumnHandler("priorityCol");
+          handler = window.gDBView.getColumnHandler(id);
         } catch (ex) {}
-        window.gDBView.addColumnHandler("priorityCol", columnHandler);
-        var threadCols = window.document.getElementById("threadCols");
-        if (!threadCols) return;
-        var columns = threadCols.getElementsByTagName("treecol");
-        if (!columns) return;
-        for (var column in columns) {
-          var id = columns[column].id;
-          if (!id) continue;
-          var handler;
-          try {
-            handler = window.gDBView.getColumnHandler(id);
-          } catch (ex) {}
-          if (handler && !handler.isString()) continue;
-          if (handler && handler.cycleCell) continue;
-          if (
-            !handler &&
-            !id.match(
-              /^(subject|sender|recipient|received|date|size|tags|account|unread|total|location|status)Col$/
-            )
-          )
-            continue;
-          createGenericHandler(id, handler);
-        }
+
+        if (handler && !handler.isString())
+          continue;
+        if (handler && handler.cycleCell)
+          continue;
+        if (!handler &&
+            !id.match(/^(priority|subject|sender|recipient|received|date|size|tags|account|unread|total|location|status|correspondent)Col$/))
+          continue;
+
+        createColumnHandler(id, handler);
       }
     },
   };
@@ -376,9 +249,13 @@ function EnhancedPriorityDisplay(context, window) {
     return preferences[pref];
   }
 
+  function getURL(relPath) {
+    return `moz-extension://${context.extension.uuid}/${relPath}`;
+  }
+
   function getPrefURL(pref) {
     const relPath = preferences[pref];
-    return `moz-extension://${context.extension.uuid}/${relPath}`;
+    return getURL(relPath);
   }
 
   const AddonListener = {
@@ -388,19 +265,43 @@ function EnhancedPriorityDisplay(context, window) {
 
         if (window.gDBView) {
           try {
-            window.gDBView.removeColumnHandler("priorityCol");
+            let threadCols = window.document.getElementById("threadCols");
+            if (!threadCols)
+              return;
+
+            let columns = threadCols.getElementsByTagName("treecol");
+            if (!columns)
+              return;
+
+            for (let column in columns) {
+              let colId = columns[column].id;
+              if (colId) {
+                let handler = window.gDBView.getColumnHandler(colId);
+                if (handler && handler.isEPDHandler) {
+                  window.gDBView.removeColumnHandler(colId);
+                  if (handler.old)
+                    window.gDBView.addColumnHandler(colId, handler.old);
+                }
+              }
+            }
           } catch (ex) {
-            console.warn("Unable to remove column handler: " + col, ex);
+            console.warn("Unable to remove column handlers", ex);
           }
         }
 
         try{
-          Services.obs.removeObserver(createDbObserver, "MsgCreateDBView");
+          Services.obs.removeObserver(dbObserver, "MsgCreateDBView");
         } catch (ex) { console.warn("Unable to remove msgcreatedbview observer", ex); }
 
         try {
           AddonManager.removeAddonListener(this);
         } catch (ex) { console.warn("Unable to remove addon listener", ex); }
+
+        try {
+          let oldStyle = window.document.getElementById('customStyle');
+          if (oldStyle)
+            oldStyle.remove();
+        } catch (ex) { console.warn("Unable to remove stylesheet", ex); }
       }
     },
     onUninstalling(addon) {
@@ -416,6 +317,54 @@ function EnhancedPriorityDisplay(context, window) {
     onOperationCancelled(addon) {},
   };
 
+  function applyStyle() {
+    let oldStyle = window.document.getElementById('customStyle');
+    if (oldStyle)
+      oldStyle.remove();
+
+    let threadTree = window.document.getElementById('threadTree');
+    if (threadTree) {
+      let rules = [
+        `#threadTree > treechildren::-moz-tree-cell-text(enhanced-priority-display-highest) {
+          font-weight: bold;
+          font-style: italic;
+          font-size: 105%;
+        }`,
+        `#threadTree > treechildren::-moz-tree-cell-text(enhanced-priority-display-high) {
+          font-style: italic;
+          font-size: 105%;
+        }`,
+        `#threadTree > treechildren::-moz-tree-image(enhanced-priority-display-high) {
+          opacity: 0.75;
+        }`,
+        `#threadTree > treechildren::-moz-tree-image(enhanced-priority-display-low),
+         #threadTree > treechildren::-moz-tree-cell-text(enhanced-priority-display-low) {
+          opacity: 0.5;
+        }`,
+        `#threadTree > treechildren::-moz-tree-image(enhanced-priority-display-lowest),
+         #threadTree > treechildren::-moz-tree-cell-text(enhanced-priority-display-lowest) {
+          opacity: 0.25;
+        }`];
+
+      for (let level of ['lowest', 'low', 'high', 'highest']) {
+        let imgPath = `ui/graphics/background-${level}.png`;
+        rules.push(`
+          #threadTree > treechildren::-moz-tree-row(enhanced-priority-display-${level}) {
+            background-image: url("${getURL(imgPath)}");
+            background-size: auto;
+            background-repeat: repeat;
+          }`);
+      }
+
+      let style = window.document.createElement('style');
+      style.setAttribute('id', 'customStyle');
+      threadTree.parentElement.insertBefore(style, threadTree);
+      for (let rule of rules) {
+        style.sheet.insertRule(rule);
+      }
+    }
+  }
+
   async function onLoad(context) {
     const storageAPI = context.apiCan.findAPIPath("storage.local");
     const storage = await storageAPI.callMethodInParentProcess(
@@ -423,17 +372,11 @@ function EnhancedPriorityDisplay(context, window) {
       );
     preferences = storage.preferences;
 
-    // This doesn't seem to work, but I'm not sure how
-    // to add css stylesheets to the root window.
-    window.document.appendChild(
-      window.MozXULElement.parseXULToFragment(
-        '<?xml-stylesheet href="ui/priority-display.css" type="text/css"?>'
-        ));
+    applyStyle();
 
-    Services.obs.addObserver(createDbObserver, "MsgCreateDBView", false);
+    Services.obs.addObserver(dbObserver, "MsgCreateDBView", false);
     AddonManager.addAddonListener(AddonListener);
   }
 
   onLoad(context);
-
 }

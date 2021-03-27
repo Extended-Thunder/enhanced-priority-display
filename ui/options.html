@@ -1,140 +1,137 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <link href="chrome://global/skin/" type="text/css">
-    <link type="text/css" href="chrome://messenger/skin/preferences/preferences.css">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        font-family: sans-serif;
+        font-size: 0.9em;
+        font-weight: 300;
+      }
 
-    <script src="options.js"></script>
-</head>
-<style>
-  body {font-family: Arial;}
-  /* Style the tab */
-  .tab {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-  }
+      section {
+        padding: 0.5em 0;
+        margin: 1em 0;
+      }
 
-  /* Style the buttons inside the tab */
-  .tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
-  }
-  
-  /* Change background color of buttons on hover */
-  .tab button:hover {
-    background-color: #ddd;
-  }
-  
-  /* Create an active/current tablink class */
-  .tab button.active {
-    background-color: #ccc;
-  }
+      label {
+        display: block;
+        padding: 0.2em 0;
+      }
 
-  /* Style the tab content */
-  .tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-  }
-  label,a{
-    font-size: 13px;
-  }
-  input[type="checkbox"]
-  {
-    width: 15px;
-    height: 15px;
-  }
-  footer button{
-    float: left;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
-  }
+      label:hover {
+        background-color: #EAEFF2;
+      }
 
-  select{
-    width: 200px;
-  }
+      .option-label {
+        white-space: nowrap;
+      }
 
+      .title {
+        font-size: 1.2em;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+      }
 
+      .subtitle {
+        /* font-size: 1.0em; */
+        margin-bottom: 0.5em;
+        font-weight: bold;
+      }
 
-</style>
-<body>
-    <div class="tab">
-        <button class="tablinks" id="btnlndon" >General</button>
-        <button class="tablinks" id="btnparis" >Advanced</button>
-        <button class="tablinks" id="btntokyo" >About</button>
-      </div>
-      <div id="general" class="tabcontent">
+      .pre {
+        font-family: monospace;
+        margin:0px;
+      }
 
-        <input type="checkbox" id="EnhancedPriorityDisplay-iconify-checkbox">
-        <label for="EnhancedPriorityDisplay-iconify-checkbox" id="lbl_iconify-checkbox" >Disply icons insted of words in Priority column</label><br><br>
+      .footer {
+        font-size: 0.8em;
+        margin-top: 0.5em;
+        text-align:center;
+      }
 
-        <input type="checkbox" id="EnhancedPriorityDisplay-style-high-checkbox">
-        <label for="EnhancedPriorityDisplay-style-high-checkbox" id="lbl_style-high-checkbox">Enlarge and italicize high-priority messages</label><br><br>
+      .footer>a {
+        margin-left:1em;
+        margin-right:1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="general">
+      <label>
+        <input type="checkbox" id="iconify-checkbox" />
+        <span class="option-label localized __MSG_iconify-checkbox__">
+          Disply icons insted of words in Priority column</span>
+      </label>
 
-        <input type="checkbox" id="EnhancedPriorityDisplay-style-low-checkbox">
-        <label for="EnhancedPriorityDisplay-style-low-checkbox" id="lbl_style-low-checkbox" >Fade low-priority messages</label><br><br>
+      <label>
+        <input type="checkbox" id="style-high-checkbox" class="preference"/>
+        <span class="option-label localized __MSG_style-high-checkbox__">
+          Enlarge and italicize high-priority messages</span>
+      </label>
 
-        <input type="checkbox" id="EnhancedPriorityDisplay-shade-high-checkbox">
-        <label for="EnhancedPriorityDisplay-shade-high-checkbox" id="lbl_shade-high-checkbox"  >Stripped background for high-priority messages</label><br><br>
+      <label>
+        <input type="checkbox" id="style-low-checkbox" class="preference"/>
+        <span class="option-label localized __MSG_style-low-checkbox__">
+          Fade low-priority messages</span>
+      </label>
 
-        <input type="checkbox" id="EnhancedPriorityDisplay-shade-low-checkbox">
-        <label for="EnhancedPriorityDisplay-shade-low-checkbox" id="lbl_shade-low-checkbox" >Stripped background for low-priority messages</label><br><br>
-      </div>
-      <div id="advanced" class="tabcontent">
-        <label id="lbl_highest-icon-textbox">Icons for highest-priority messages:</label><br>
-        <input type="text" id="EnhancedPriorityDisplay-highest-icon-textbox" size="50"><br>
-        <label id="lbl_high-icon-textbox" >Icons for high-priority messages:</label><br>
-        <input  type="text" id="EnhancedPriorityDisplay-high-icon-textbox" size="50"><br>
-        <label id="lbl_low-icon-textbox" >Icons for low-priority messages:</label><br>
-        <input type="text" id="EnhancedPriorityDisplay-low-icon-textbox" size="50"><br>
-        <label id="lowest-icon-textbox">Icons for Lowest-priority messages:</label><br>
-        <input type="text" id="EnhancedPriorityDisplay-lowest-icon-textbox" size="50"><br>
-        <label id="Opt_lglvldump">Dump log level</label><br>
-        <select  id="EnhancedPriorityDisplay-dump-level-menu">
-          <option value="Fatal">Fatal</option>
-          <option value="Error">Error</option>
-          <option value="Warn">Warn</option>
-          <option value="Info">Info</option>
-          <option value="Config">Config</option>
-          <option value="Debug">Debug</option>
-          <option value="Trace">Trace</option>
-          <option value="All">All</option>
-        </select><br>
-        <label id ="Opt_lglvlconsole">Console log Level</label><br>
-        <select  id="EnhancedPriorityDisplay-console-level-menu">
-          <option value="Fatal">Fatal</option>
-          <option value="Error">Error</option>
-          <option value="Warn">Warn</option>
-          <option value="Info">Info</option>
-          <option value="Config">Config</option>
-          <option value="Debug">Debug</option>
-          <option value="Trace">Trace</option>
-          <option value="All">All</option>
-        </select>
+      <label>
+        <input type="checkbox" id="shade-high-checkbox" class="preference"/>
+        <span class="option-label localized __MSG_shade-high-checkbox__">
+          Stripped background for high-priority messages</span>
+      </label>
 
-      </div>
-      <div id="about" class="tabcontent"><br>
-        <label id="lblinfo"></label>
-        <a href="mailto:jik+epd@kamens.us?subject=Enhanced%20Priority%20Display" id="lblcontact"></a>
-        <a href="https://addons.mozilla.org/thunderbird/addon/enhanced-priority-display/contribute/roadblock/?src=prefwindow" id="lbldonate"></a>
-      </div>
-      <footer>
-        <div>
-          <button id="btn_Save">Save</button>
-          <button id="btn_Cancel">Cancel</button>
+      <label>
+        <input type="checkbox" id="shade-low-checkbox" class="preference"/>
+        <span class="option-label localized __MSG_shade-low-checkbox__">
+          Stripped background for low-priority messages</span>
+      </label>
+
+      <hr/>
+
+      <label><span class="option-label localized __MSG_highest-icon-textbox__">
+        Icons for highest-priority messages:</span><br/>
+        <input type="text" id="highest-icon-textbox" size="50" style="margin:0.25em 2em;"/>
+      </label>
+
+      <label><span class="option-label localized __MSG_high-icon-textbox__">
+        Icons for high-priority messages:</span><br/>
+        <input type="text" id="high-icon-textbox" size="50" style="margin:0.25em 2em"/>
+      </label>
+
+      <label><span class="option-label localized __MSG_low-icon-textbox__">
+        Icons for low-priority messages:</span><br/>
+        <input type="text" id="low-icon-textbox" size="50" style="margin:0.25em 2em"/>
+      </label>
+
+      <label><span class="option-label localized __MSG_lowest-icon-textbox__">
+        Icons for Lowest-priority messages:</span><br/>
+        <input type="text" id="lowest-icon-textbox" size="50" style="margin:0.25em 2em;"/>
+      </label>
+    </div>
+
+    <div class="footer">
+      <div id="about-section" style='padding: 2em;'>
+        <div class="localized __MSG_copyright.label__">
+          Copyright &#xA9; Jonathan Kamens
         </div>
-      </footer>
-</body>
+        <div class="localized __MSG_license.label__">
+          Released under the Mozilla Public License, version 2.0
+        </div>
+      </div>
+
+      <a href="mailto:jik+epd@kamens.us?subject=Enhanced%20Priority%20Display"
+        class="option-label localized __MSG_contact.label__">
+        Contact the author
+      </a>
+      <a href="https://addons.mozilla.org/thunderbird/addon/enhanced-priority-display/contribute/roadblock/?src=prefwindow"
+        class="option-label localized __MSG_donate.label__">
+        Donate
+      </a>
+    </div>
+
+    <script type="text/javascript" src="/ui/localize.js"></script>
+    <script type="text/javascript" src="/ui/options.js"></script>
+  </body>
 </html>
