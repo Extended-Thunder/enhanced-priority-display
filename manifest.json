@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "2.0.8",
+  "version": "3.0.0",
   "description": "__MSG_appDesc__",
   "author": "Jonathan Kamens",
   "default_locale": "en-US",
@@ -9,8 +9,7 @@
   "applications": {
     "gecko": {
       "id": "EnhancedPriorityDisplay@kamens.us",
-      "strict_min_version": "68.0a1",
-      "strict_max_version": "*"
+      "strict_min_version": "68.0a1"
     }
   },
 
@@ -28,8 +27,8 @@
   },
 
   "web_accessible_resources": [
-    "experiments/implementation.js",
     "default/preferences.json",
+    "experiments/*",
     "ui/graphics/*"
   ],
 
@@ -40,6 +39,14 @@
         "scopes": ["addon_parent"],
         "script": "experiments/implementation.js",
         "paths": [["ep_display"]]
+      }
+    },
+    "ep_prefs": {
+      "schema": "experiments/prefSchema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/prefImplementation.js",
+        "paths": [["ep_prefs"]]
       }
     }
   },

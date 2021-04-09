@@ -1,93 +1,35 @@
 const EPD = {
-  async migratePreferences() {
-    const CURRENT_LEGACY_MIGRATION = 1;
-
-    // Migrate legacy preferences to local storage.
-    const { preferences } = await messenger.storage.local.get({
-      preferences: {},
-    });
-    const currentMigrationNumber = preferences.migratedLegacy | 0;
-
-    if (currentMigrationNumber == CURRENT_LEGACY_MIGRATION) return;
-
+  async getPref(key, dtype, defaultVal) {
+    return await messenger.ep_prefs.getLegacyPref(key, dtype, defaultVal.toString());
+  },
+  async setPref(key, dtype, value) {
+    return await messenger.ep_prefs.setLegacyPref(key, dtype, value.toString());
+  },
+  async loadPreferences() {
     const prefDefaults = await fetch("/default/preferences.json").then((ptxt) =>
       ptxt.json()
     );
 
-    // Load legacy preferences
-    if (currentMigrationNumber === 0) {
-      // Merge any existing legacy preferences into the new storage system
-      let prefKeys = [];
-      let legacyValuePromises = [];
+    let preferences = {};
 
-      // Load values from legacy storage, substitute defaults if not defined.
-      for (let prefName of Object.getOwnPropertyNames(prefDefaults)) {
-        prefKeys.push(prefName);
-        let dtype = prefDefaults[prefName][0];
-        let defVal = prefDefaults[prefName][1];
-        let legacyKey = prefDefaults[prefName][2];
-        let pp; // Promise that resolves to this preference value.
-        const isquickopt = prefName.match(/quickOptions(\d)Label/);
-        if (isquickopt) {
-          const delayMins =
-            +prefDefaults[`quickOptions${isquickopt[1]}Args`][1] | 0;
-          const localizedDelayLabel = `${new Sugar.Date(
-            Date.now() + 60000 * delayMins
-          ).relative()}`;
-          pp = new Promise((resolve, reject) => {
-            resolve(localizedDelayLabel);
-          });
-        } else if (legacyKey === null) {
-          pp = new Promise((resolve, reject) => resolve(defVal));
-        } else {
-          pp = messenger.ep_display.getLegacyPref(
-            legacyKey,
-            dtype,
-            defVal.toString()
-          );
-        }
-        legacyValuePromises.push(pp);
-      }
-      // Combine keys and legacy/default values back into a single object.
-      let legacyPrefs = await Promise.all(legacyValuePromises).then(
-        (legacyVals) => {
-          return legacyVals.reduce((r, f, i) => {
-            r[prefKeys[i]] = f;
-            return r;
-          }, {});
-        }
-      );
+    for (let key of Object.getOwnPropertyNames(prefDefaults)) {
+      let dtype = prefDefaults[key][0];
+      let defaultVal = prefDefaults[key][1];
 
-      console.info(
-        "EnhancedPriorityDisplay: migrating legacy/default preferences."
-      );
+      // If the value is already set, this function will return the
+      // current value, otherwise it automatically returns the default.
+      let value = await EPD.getPref(key, dtype, defaultVal);
+      let success = await EPD.setPref(key, dtype, value);
+      if (success !== true)
+        console.warn(`Unable to set preference: ${key}`);
 
-      // Merge legacy preferences into undefined preference keys
-      prefKeys.forEach((key) => {
-        if (preferences[key] === undefined) {
-          preferences[key] = legacyPrefs[key];
-        }
-      });
+      preferences[key] = value;
     }
 
-    // Pick up any new properties from defaults
-    for (let prefName of Object.getOwnPropertyNames(prefDefaults)) {
-      if (preferences[prefName] === undefined) {
-        const prefValue = prefDefaults[prefName][1];
-        console.debug(`Added new preference ${prefName}: ${prefValue}`);
-        preferences[prefName] = prefValue;
-      }
-    }
-
-    preferences.migratedLegacy = CURRENT_LEGACY_MIGRATION;
-
-    await messenger.storage.local.set({ preferences });
-
-    return currentMigrationNumber;
+    messenger.storage.local.set({ preferences });
   },
 
-  async init() {
-    // Print version info
+  async showVersionInfo() {
     const extensionName = messenger.i18n.getMessage("appName");
     const thisVersion = messenger.runtime.getManifest().version;
     const browserInfo = await messenger.runtime.getBrowserInfo();
@@ -97,13 +39,39 @@ const EPD = {
         `${browserInfo.name} ${browserInfo.version} (${browserInfo.buildID}) ` +
         `[${platformInfo.os} ${platformInfo.arch}]`
     );
+  },
 
-    await this.migratePreferences();
+  async init() {
+    this.showVersionInfo();
+    await this.loadPreferences();
 
     // Load extension
     messenger.ep_display.init();
   }
 };
 
-EPD.init();
+EPD.init().then(() => {
+  messenger.storage.onChanged.addListener(async (changes, areaName) => {
+    if (areaName === "local") {
+      console.log("Propagating changes from local storage back to legacy storage")
 
+      const { preferences } = await messenger.storage.local.get({ preferences: {} });
+
+      for (let key of Object.getOwnPropertyNames(preferences)) {
+        let value = preferences[key];
+        let dtype;
+        switch (typeof value) {
+          case "boolean":
+            dtype = 'bool';
+            break;
+          case "number":
+            dtype = ((value%1.0) == 0.0) ? 'int' : 'char';
+            break;
+          default:
+            dtype = 'char';
+        }
+        EPD.setPref(key, dtype, value.toString());
+      }
+    }
+  });
+});

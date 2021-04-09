@@ -102,10 +102,7 @@ var EPDOptions = {
     "high-icon-textbox": "HighIcon",
     "low-icon-textbox": "LowIcon",
     "lowest-icon-textbox": "LowestIcon"
-    /*"console-level-menu": "LogConsole"*/
   },
-
-  checkboxGroups: {},
 
   async prefUpdatedListener(event) {
     // Respond to changes in UI input fields
@@ -116,17 +113,6 @@ var EPDOptions = {
       if (element.type === "checkbox" || element.type === "radio") {
         preferences[pref] = element.checked;
         console.info(`Set option (radio) ${element.id}: ${element.checked}`);
-        if (element.checked && EPDOptions.checkboxGroups[element.id])
-          for (const id2 of EPDOptions.checkboxGroups[element.id]) {
-            const element2 = document.getElementById(id2);
-            let pref2 = EPDOptions.mapping[id2];
-            if (element2.checked) {
-              element2.checked = false;
-              preferences[pref2] = false;
-              console.info(`Set option (radio) ${id2}: false`);
-              affected.push(element2);
-            }
-          }
       } else {
         let id = element.id;
         let value = element.value;
@@ -143,19 +129,6 @@ var EPDOptions = {
     });
   },
 
-  // // Currently unused
-  // exclusiveCheckboxSet(ids) {
-  //   // Creates a set of checkbox elements in which a maximum of
-  //   // one item can be selected at any time.
-  //   ids.forEach(id1 => {
-  //     EPDOptions.checkboxGroups[id1] = [];
-  //     ids.forEach(id2 => {
-  //       if (id1 !== id2)
-  //       EPDOptions.checkboxGroups[id1].push(id2);
-  //     });
-  //   });
-  // },
-
   onLoad() {
     const mapping = EPDOptions.mapping;
     OptionTools.applyPrefsToUI(mapping).then(() => {
@@ -170,56 +143,5 @@ var EPDOptions = {
     }).catch(console.error);
   }
 };
-
-function openTab(evt, tabname) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(tabname).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-function loadUi_i18ncontent() {
-  var lbl_iconify_ckbx = document.getElementById("lbl_iconify-checkbox");
-  var lbl_style_high_ckbx = document.getElementById("lbl_style-high-checkbox");
-  var lbl_style_low_ckbx = document.getElementById("lbl_style-low-checkbox");
-  var lbl_shade_high_ckbx = document.getElementById("lbl_shade-high-checkbox");
-  var lbl_shade_low_ckbx = document.getElementById("lbl_shade-low-checkbox");
-  var lbl_highest_icon_txbx = document.getElementById(
-    "lbl_highest-icon-textbox"
-  );
-  var lbl_high_icon_txbx = document.getElementById("lbl_low-icon-textbox");
-  var lowest_icon_txbx = document.getElementById("lowest-icon-textbox");
-  var opt_lglvldump = document.getElementById("Opt_lglvldump");
-  var opt_lglvlconsole = document.getElementById("Opt_lglvlconsole");
-  var lblinfo = document.getElementById("lblinfo");
-  var lblcontact = document.getElementById("lblcontact");
-  var lbldonate = document.getElementById("lbldonate");
-
-  lbl_iconify_ckbx.value = browser.i18n.getMessage("iconify-checkbox");
-  lbl_style_high_ckbx.value = browser.i18n.getMessage("style-high-checkbox");
-  lbl_style_low_ckbx.value = browser.i18n.getMessage("style-low-checkbox");
-  lbl_shade_high_ckbx.value = browser.i18n.getMessage("shade-high-checkbox");
-  lbl_shade_low_ckbx.value = browser.i18n.getMessage("shade-low-checkbox");
-  lbl_highest_icon_txbx.value = browser.i18n.getMessage("highest-icon-textbox");
-  lbl_high_icon_txbx.value = browser.i18n.getMessage("high-icon-textbox");
-  lowest_icon_txbx.value = browser.i18n.getMessage("low-icon-textbox");
-  opt_lglvldump.value = browser.i18n.getMessage("Opt_logleveldump");
-  opt_lglvlconsole.value = browser.i18n.getMessage("Opt_loglevelconsole");
-  lblinfo.innerHTML =
-    browser.i18n.getMessage("copyright.label") +
-    "<br>" +
-    browser.i18n.getMessage("license.label") +
-    "<br>" +
-    browser.i18n.getMessage("support.label") +
-    "<br>";
-  lblcontact.innerHTML = browser.i18n.getMessage("contact.label");
-  lbldonate.innerHTML = browser.i18n.getMessage("donate.label");
-}
 
 window.addEventListener("load", EPDOptions.onLoad, false);

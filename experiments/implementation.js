@@ -1,7 +1,7 @@
-const { utils: Cu, classes: Cc, interfaces: Ci } = Components;
-const { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-const { ExtensionSupport } = ChromeUtils.import("resource:///modules/ExtensionSupport.jsm");
-const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { utils: Cu, classes: Cc, interfaces: Ci } = Components;
+var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
+var { ExtensionSupport } = ChromeUtils.import("resource:///modules/ExtensionSupport.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { AddonManager } = ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
 
 var ep_display = class extends ExtensionCommon.ExtensionAPI {
@@ -13,53 +13,14 @@ var ep_display = class extends ExtensionCommon.ExtensionAPI {
         async init() {
           try {
             ExtensionSupport.registerWindowListener("epdWindowListener", {
-              chromeURLs: [
-                "chrome://messenger/content/messenger.xhtml",
-                "chrome://messenger/content/messenger.xul",
-              ],
+              chromeURLs: [ "chrome://messenger/content/messenger.xhtml",
+                            "chrome://messenger/content/messenger.xul" ],
               onLoadWindow(window) {
                 EnhancedPriorityDisplay(context, window);
-              },
+              }
             });
           } catch (exception) {
             console.error(exception);
-          }
-        },
-        async getLegacyPref(name, dtype, defVal) {
-          let prefDefault = defVal;
-          let getter;
-          Services.prefs.getLegacyPref
-
-          switch (dtype) {
-            case "bool": {
-              prefDefault = (defVal === "true");
-              getter = Services.prefs.getBoolPref;
-              break;
-            }
-            case "int": {
-              prefDefault = (Number(defVal) | 0);
-              getter = Services.prefs.getIntPref;
-              break;
-            }
-            case "char": {
-              getter = Services.prefs.getCharPref;
-              break;
-            }
-            case "string": {
-              getter = Services.prefs.getStringPref;
-              break;
-            }
-            default: {
-              throw new Error("Unexpected pref type");
-            }
-          }
-
-          try {
-            const prefName = `extensions.EnhancedPriorityDisplay.${name}`;
-            return getter(prefName, prefDefault);
-          } catch (err) {
-            console.error(err);
-            return prefDefault;
           }
         }
       },
@@ -82,7 +43,24 @@ var ep_display = class extends ExtensionCommon.ExtensionAPI {
   }
 };
 
+
+/*
+Function to execute on load for any new messenger window.
+*/
 function EnhancedPriorityDisplay(context, window) {
+
+  function gBP(pref) {
+    pref = `extensions.EnhancedPriorityDisplay.${pref}`;
+    return Services.prefs.getBoolPref(pref, undefined);
+  }
+
+  function gCP(pref) {
+    pref = `extensions.EnhancedPriorityDisplay.${pref}`;
+    let value = Services.prefs.getCharPref(pref);
+    value = value.replace("chrome://EnhancedPriorityDisplay/",
+                          `moz-extension://${context.extension.uuid}/`);
+    return value;
+  }
 
   function createColumnHandler(colId, oldHandler) {
     if (!window.gDBView)
@@ -137,6 +115,7 @@ function EnhancedPriorityDisplay(context, window) {
             if (gBP(which + "High"))
               properties = "enhanced-priority-display-high";
             break;
+          case "4":
           case "3":
             if (gBP(which + "Low"))
               properties = "enhanced-priority-display-low";
@@ -176,14 +155,14 @@ function EnhancedPriorityDisplay(context, window) {
 
           switch (columnHandler.getPriorityLevel(row)) {
             case "6":
-              return getPrefURL("HighestIcon");
+              return gCP("HighestIcon");
             case "5":
-              return getPrefURL("HighIcon");
+              return gCP("HighIcon");
             case "4":
             case "3":
-              return getPrefURL("LowIcon");
+              return gCP("LowIcon");
             case "2":
-              return getPrefURL("LowestIcon");
+              return gCP("LowestIcon");
             default:
               if (columnHandler.old)
                 return columnHandler.old.getImageSrc(row, col);
@@ -242,21 +221,6 @@ function EnhancedPriorityDisplay(context, window) {
       }
     },
   };
-
-  let preferences = {};
-
-  function gBP(pref) {
-    return preferences[pref];
-  }
-
-  function getURL(relPath) {
-    return `moz-extension://${context.extension.uuid}/${relPath}`;
-  }
-
-  function getPrefURL(pref) {
-    const relPath = preferences[pref];
-    return getURL(relPath);
-  }
 
   const AddonListener = {
     resetSession(addon, who) {
@@ -326,16 +290,12 @@ function EnhancedPriorityDisplay(context, window) {
     if (threadTree) {
       let rules = [
         `#threadTree > treechildren::-moz-tree-cell-text(enhanced-priority-display-highest) {
-          font-weight: bold;
           font-style: italic;
-          font-size: 105%;
+          font-size: 110%;
         }`,
         `#threadTree > treechildren::-moz-tree-cell-text(enhanced-priority-display-high) {
           font-style: italic;
           font-size: 105%;
-        }`,
-        `#threadTree > treechildren::-moz-tree-image(enhanced-priority-display-high) {
-          opacity: 0.75;
         }`,
         `#threadTree > treechildren::-moz-tree-image(enhanced-priority-display-low),
          #threadTree > treechildren::-moz-tree-cell-text(enhanced-priority-display-low) {
@@ -348,9 +308,10 @@ function EnhancedPriorityDisplay(context, window) {
 
       for (let level of ['lowest', 'low', 'high', 'highest']) {
         let imgPath = `ui/graphics/background-${level}.png`;
+        let imgUrl = `moz-extension://${context.extension.uuid}/${imgPath}`
         rules.push(`
           #threadTree > treechildren::-moz-tree-row(enhanced-priority-display-${level}) {
-            background-image: url("${getURL(imgPath)}");
+            background-image: url("${imgUrl}");
             background-size: auto;
             background-repeat: repeat;
           }`);
@@ -358,6 +319,7 @@ function EnhancedPriorityDisplay(context, window) {
 
       let style = window.document.createElement('style');
       style.setAttribute('id', 'customStyle');
+      window.document.documentElement.appendChild(style);
       threadTree.parentElement.insertBefore(style, threadTree);
       for (let rule of rules) {
         style.sheet.insertRule(rule);
@@ -365,18 +327,11 @@ function EnhancedPriorityDisplay(context, window) {
     }
   }
 
-  async function onLoad(context) {
-    const storageAPI = context.apiCan.findAPIPath("storage.local");
-    const storage = await storageAPI.callMethodInParentProcess(
-        "get", [{ "preferences": {} }]
-      );
-    preferences = storage.preferences;
-
+  async function onLoad() {
     applyStyle();
-
     Services.obs.addObserver(dbObserver, "MsgCreateDBView", false);
     AddonManager.addAddonListener(AddonListener);
   }
 
-  onLoad(context);
+  onLoad();
 }

@@ -1,13 +1,11 @@
 {
-  "Iconify": ["bool", true, null],
-  "StyleHigh": ["bool", true, null],
-  "StyleLow": ["bool", true, null],
-  "ShadeHigh": ["bool", true, null],
-  "ShadeLow": ["bool", true, null],
-  "HighestIcon": ["string", "ui/graphics/highest.gif", null],
-  "HighIcon": ["string", "ui/graphics/high.gif", null],
-  "LowIcon": ["string", "ui/graphics/low.gif", null],
-  "LowestIcon": ["string", "ui/graphics/lowest.gif", null],
-  "LogConsole": ["string", "Warn", "logging.console"],
-  "LogDump": ["string", "Warn", "logging.dump"]
+  "Iconify": ["bool", true],
+  "StyleHigh": ["bool", true],
+  "StyleLow": ["bool", true],
+  "ShadeHigh": ["bool", true],
+  "ShadeLow": ["bool", true],
+  "HighestIcon": ["string", "chrome://EnhancedPriorityDisplay/ui/graphics/highest.gif"],
+  "HighIcon": ["string", "chrome://EnhancedPriorityDisplay/ui/graphics/high.gif"],
+  "LowIcon": ["string", "chrome://EnhancedPriorityDisplay/ui/graphics/low.gif"],
+  "LowestIcon": ["string", "chrome://EnhancedPriorityDisplay/ui/graphics/lowest.gif"]
 }

@@ -8,29 +8,6 @@
         "desription": "Initialize legacy components of the extension.",
         "async": true,
         "parameters": []
-      },
-      {
-        "name": "getLegacyPref",
-        "type": "function",
-        "description": "Gets a preference.",
-        "async": true,
-        "parameters": [
-          {
-            "name": "name",
-            "type": "string",
-            "description": "The preference name"
-          },
-          {
-            "name": "dtype",
-            "type": "string",
-            "description": "Data type of the preference"
-          },
-          {
-            "name": "defVal",
-            "type": "string",
-            "description": "Fallback value if nothing is returned."
-          }
-        ]
       }
     ]
   }
