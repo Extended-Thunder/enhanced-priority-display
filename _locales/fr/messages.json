@@ -1,0 +1,62 @@
+{
+    "appDesc": {
+        "message": "Affichage am\u00e9lior\u00e9 des priorit\u00e9s dans le panneau des messages."
+    },
+    "prefwindow.title": {
+        "message": "Pr\u00e9f\u00e9rences de Enhanced Priority Display"
+    },
+    "general.label": {
+        "message": "G\u00e9n\u00e9ral"
+    },
+    "advanced.label": {
+        "message": "Avanc\u00e9"
+    },
+    "about.label": {
+        "message": "\u00c0 propos"
+    },
+    "license.label": {
+        "message": "Distribu\u00e9 sous la Mozilla Public License, version 2.0"
+    },
+    "support.label": {
+        "message": "Aider au d\u00e9veloppement de ce module et d'excellents autres !"
+    },
+    "contact.label": {
+        "message": "Contacter l'auteur"
+    },
+    "donate.label": {
+        "message": "Faire un don"
+    },
+    "iconify.label": {
+        "message": "Remplacer le texte de la colonne \"Priorit\u00e9\" par des ic\u00f4nes"
+    },
+    "styleHigh.label": {
+        "message": "Amplifier les messages priorit\u00e9 haute"
+    },
+    "styleLow.label": {
+        "message": "Estomper les messages priorit\u00e9 basse"
+    },
+    "shadeHigh.label": {
+        "message": "Fond ray\u00e9 pour les messages priorit\u00e9 haute"
+    },
+    "shadeLow.label": {
+        "message": "Fond ray\u00e9 pour les messages priorit\u00e9 basse"
+    },
+    "highestIcon.label": {
+        "message": "Ic\u00f4ne pour les messages priorit\u00e9 maximale :"
+    },
+    "highIcon.label": {
+        "message": "Ic\u00f4ne pour les messages priorit\u00e9 haute :"
+    },
+    "lowIcon.label": {
+        "message": "Ic\u00f4ne pour les messages priorit\u00e9 basse :"
+    },
+    "lowestIcon.label": {
+        "message": "Ic\u00f4ne pour les messages priorit\u00e9 minimale :"
+    },
+    "dumpLevel.label": {
+        "message": "Niveau de journalisation de dump :"
+    },
+    "consoleLevel.label": {
+        "message": "Niveau de journalisation de la console :"
+    }
+}

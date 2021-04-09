@@ -1,0 +1,62 @@
+{
+    "appDesc": {
+        "message": "Visualizzazione evidenziata della priorit\u00e0 dei messaggi in elenco."
+    },
+    "prefwindow.title": {
+        "message": "Preferenze Enhanced Priority Display"
+    },
+    "general.label": {
+        "message": "Generali"
+    },
+    "advanced.label": {
+        "message": "Avanzate"
+    },
+    "about.label": {
+        "message": "Informazioni su..."
+    },
+    "license.label": {
+        "message": "Rilasciato sotto Mozilla Public License, versione 2.0"
+    },
+    "support.label": {
+        "message": "Per cortesia sostieni lo sviluppatore per questo e altri fantastici componenti aggiuntivi!"
+    },
+    "contact.label": {
+        "message": "Contatta l'autore"
+    },
+    "donate.label": {
+        "message": "Donazioni"
+    },
+    "iconify.label": {
+        "message": "Visualizza icone al posto delle parole nella colonna Priorit\u00e0"
+    },
+    "styleHigh.label": {
+        "message": "Mostra i messaggi con priorit\u00e0 alta ingranditi e in corsivo"
+    },
+    "styleLow.label": {
+        "message": "Mostra i messaggi con priorit\u00e0 bassa sbiaditi"
+    },
+    "shadeHigh.label": {
+        "message": "Sfondo a righe per i messaggi con priorit\u00e0 alta"
+    },
+    "shadeLow.label": {
+        "message": "Sfondo a righe per i messaggi con priorit\u00e0 bassa"
+    },
+    "highestIcon.label": {
+        "message": "Icona per i messaggi a priorit\u00e0 pi\u00f9 elevata"
+    },
+    "highIcon.label": {
+        "message": "Icona per i messaggi a priorit\u00e0 alta"
+    },
+    "lowIcon.label": {
+        "message": "Icona per i messaggi a priorit\u00e0 bassa"
+    },
+    "lowestIcon.label": {
+        "message": "Icona per i messaggi a priorit\u00e0 pi\u00f9 bassa"
+    },
+    "dumpLevel.label": {
+        "message": "Livello log dump"
+    },
+    "consoleLevel.label": {
+        "message": "Livello log console"
+    }
+}

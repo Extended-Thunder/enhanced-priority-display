@@ -1,0 +1,62 @@
+{
+    "appDesc": {
+        "message": "\u589e\u5f3a\u8bdd\u9898\u9762\u677f\u7684\u6d88\u606f\u4f18\u5148\u7ea7\u663e\u793a\u6548\u679c\u3002"
+    },
+    "prefwindow.title": {
+        "message": "Enhanced Priority Display \u9996\u9009\u9879"
+    },
+    "general.label": {
+        "message": "\u5e38\u89c4"
+    },
+    "advanced.label": {
+        "message": "\u9ad8\u7ea7"
+    },
+    "about.label": {
+        "message": "\u5173\u4e8e"
+    },
+    "license.label": {
+        "message": "\u53d1\u5e03\u4e8e Mozilla Public License 2.0 \u7248\u672c\u4e0b"
+    },
+    "support.label": {
+        "message": "\u8bf7\u652f\u6301\u6b64\u9644\u52a0\u7ec4\u4ef6\u4ee5\u53ca\u5176\u4ed6\u90a3\u4e9b\u68d2\u6781\u4e86\u7684\u9644\u52a0\u7ec4\u4ef6\u7684\u53d1\u5c55\uff01"
+    },
+    "contact.label": {
+        "message": "\u8054\u7cfb\u4f5c\u8005"
+    },
+    "donate.label": {
+        "message": "\u6350\u52a9"
+    },
+    "iconify.label": {
+        "message": "\u5728\u4f18\u5148\u7ea7\u5217\u4ee5\u663e\u793a\u56fe\u6807\u4ee3\u66ff\u6587\u5b57"
+    },
+    "styleHigh.label": {
+        "message": "\u589e\u5927\u5e76\u659c\u4f53\u5316\u9ad8\u4f18\u5148\u7ea7\u6d88\u606f\u7684\u5b57\u4f53"
+    },
+    "styleLow.label": {
+        "message": "\u6de1\u5316\u4f4e\u4f18\u5148\u7ea7\u6d88\u606f"
+    },
+    "shadeHigh.label": {
+        "message": "\u5bf9\u9ad8\u4f18\u5148\u7ea7\u6d88\u606f\u663e\u793a\u6761\u7eb9\u80cc\u666f"
+    },
+    "shadeLow.label": {
+        "message": "\u5bf9\u4f4e\u4f18\u5148\u7ea7\u6d88\u606f\u663e\u793a\u6761\u7eb9\u80cc\u666f"
+    },
+    "highestIcon.label": {
+        "message": "\u6700\u9ad8\u4f18\u5148\u7ea7\u6d88\u606f\u7684\u56fe\u6807\uff1a"
+    },
+    "highIcon.label": {
+        "message": "\u9ad8\u4f18\u5148\u7ea7\u6d88\u606f\u7684\u56fe\u6807\uff1a"
+    },
+    "lowIcon.label": {
+        "message": "\u4f4e\u4f18\u5148\u7ea7\u6d88\u606f\u7684\u56fe\u6807\uff1a"
+    },
+    "lowestIcon.label": {
+        "message": "\u6700\u4f4e\u4f18\u5148\u7ea7\u6d88\u606f\u7684\u56fe\u6807\uff1a"
+    },
+    "dumpLevel.label": {
+        "message": "\u8f6c\u50a8\u65e5\u5fd7\u7ea7\u522b\uff1a"
+    },
+    "consoleLevel.label": {
+        "message": "\u63a7\u5236\u53f0\u65e5\u5fd7\u7ea7\u522b\uff1a"
+    }
+}

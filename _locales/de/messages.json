@@ -1,0 +1,56 @@
+{
+    "appDesc": {
+        "message": "Verbesserte Thread-Fenster-Anzeige f\u00fcr Meldepriorit\u00e4ten."
+    },
+    "prefwindow.title": {
+        "message": "Enhanced Priority Display-Einstellungen"
+    },
+    "general.label": {
+        "message": "Allgemein"
+    },
+    "advanced.label": {
+        "message": "Erweitert"
+    },
+    "about.label": {
+        "message": "\u00dcber"
+    },
+    "license.label": {
+        "message": "Ver\u00f6ffentlicht unter der Mozilla Public License, version 2.0"
+    },
+    "support.label": {
+        "message": "Bitte unterst\u00fctzen Sie die Entwicklung dieses und weiterer toller Add-Ons!"
+    },
+    "contact.label": {
+        "message": "Entwickler kontaktieren"
+    },
+    "donate.label": {
+        "message": "Spenden"
+    },
+    "iconify.label": {
+        "message": "Zeige Icons statt W\u00f6rter in der Priorit\u00e4t-Spalte an"
+    },
+    "styleHigh.label": {
+        "message": "Hohe Priorit\u00e4t-Benachrichtigungen vergr\u00f6\u00dfern und in Kursivschrift anzeigen"
+    },
+    "styleLow.label": {
+        "message": "Niedrige Priorit\u00e4t-Benachrichtigungen ausblenden"
+    },
+    "shadeHigh.label": {
+        "message": "Gestreifter Hintergrund f\u00fcr Hohe Priorit\u00e4t-Benachrichtigungen"
+    },
+    "shadeLow.label": {
+        "message": "Gestreifter Hintergrund f\u00fcr Niedrige Priorit\u00e4t-Benachrichtigungen"
+    },
+    "highestIcon.label": {
+        "message": "Icon f\u00fcr H\u00f6chste Priorit\u00e4t-Benachrichtigungen:"
+    },
+    "highIcon.label": {
+        "message": "Icon f\u00fcr Hohe Priorit\u00e4t-Benachrichtigungen:"
+    },
+    "lowIcon.label": {
+        "message": "Icon f\u00fcr Niedrige Priorit\u00e4t-Benachrichtigungen:"
+    },
+    "lowestIcon.label": {
+        "message": "Icon f\u00fcr Niedrigste Priorit\u00e4t-Benachrichtigungen:"
+    }
+}
