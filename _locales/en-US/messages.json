@@ -1,76 +1,68 @@
 {
     "appName": {
-        "message": "Enhanced Priority Display",
-        "description": "The name of the add-on, displayed in various places."
+        "message": "Enhanced Priority Display"
     },
     "appDesc": {
-        "message": "Enhanced thread pane display of message priorities.",
-        "description": "A short description of the add-on."
+        "message": "Enhanced thread pane display of message priorities."
     },
-     "iconify-checkbox":{
-        "message": "Disply icons insted of words in Priority column",
-        "description": ""
+    "prefwindow.title": {
+        "message": "Enhanced Priority Display preferences"
     },
-    "style-high-checkbox":{
-        "message": "Enlarge and italicize high-priority messages",
-        "description": ""
+    "general.label": {
+        "message": "General"
     },
-    "style-low-checkbox":{
-        "message": "Fade low-priority messages",
-        "description": ""
+    "advanced.label": {
+        "message": "Advanced"
     },
-    "shade-high-checkbox":{
-        "message": "Stripped background for high-priority messages",
-        "description": ""
+    "about.label": {
+        "message": "About"
     },
-    "shade-low-checkbox":{
-        "message": "Stripped background for low-priority messages",
-        "description": ""
+    "copyright.label": {
+        "message": "Copyright \u00a9 2012,2013,2015 Jonathan Kamens"
     },
-    "highest-icon-textbox":{
-        "message": "Icons for highest-priority messages:",
-        "description": ""
+    "license.label": {
+        "message": "Released under the Mozilla Public License, version 2.0"
     },
-    "high-icon-textbox":{
-        "message": "Icons for high-priority messages:",
-        "description": ""
+    "support.label": {
+        "message": "Please support the development of this and other great add-ons!"
     },
-    "low-icon-textbox":{
-        "message": "Icons for low-priority messages:",
-        "description": ""
+    "contact.label": {
+        "message": "Contact the author"
     },
-    "lowest-icon-textbox":{
-        "message": "Icons for Lowest-priority messages:",
-        "description": ""
+    "donate.label": {
+        "message": "Donate"
     },
-    "Opt_logleveldump":{
-        "message": "Dump log level",
-        "description": ""
+    "iconify.label": {
+        "message": "Display icons instead of words in Priority column"
     },
-    "Opt_loglevelconsole":{
-        "message": "Console log Level",
-        "description": ""
+    "styleHigh.label": {
+        "message": "Enlarge and italicize high-priority messages"
     },
-    "copyright.label":{
-        "message": "Copyright &#xA9; 2012,2013,2015 Jonathan Kamens",
-        "description":""
+    "styleLow.label": {
+        "message": "Fade low-priority messages"
     },
-
-    "license.label":{
-        "message": "Released under the Mozilla Public License, version 2.0",
-        "description": ""
+    "shadeHigh.label": {
+        "message": "Striped background for high-priority messages"
     },
-    "support.label":{
-        "message": "Please support the development of this and other great add-ons!",
-        "description": ""
+    "shadeLow.label": {
+        "message": "Striped background for low-priority messages"
     },
-    "contact.label":{
-        "message": "Contact the author",
-        "description": ""
+    "highestIcon.label": {
+        "message": "Icon for highest-priority messages (Use file:// prefix for local paths):"
     },
-    "donate.label":{
-        "message": "Donate",
-        "description": ""
+    "highIcon.label": {
+        "message": "Icon for high-priority messages:"
+    },
+    "lowIcon.label": {
+        "message": "Icon for low-priority messages:"
+    },
+    "lowestIcon.label": {
+        "message": "Icon for lowest-priority messages:"
+    },
+    "dumpLevel.label": {
+        "message": "Dump log level:"
+    },
+    "consoleLevel.label": {
+        "message": "Console log level:"
     }
-
 }
