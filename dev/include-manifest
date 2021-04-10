@@ -1,6 +1,7 @@
 _locales
 _locales/*
 _locales/*/*
+default/preferences.json
 experiments
 experiments/*
 ui
