@@ -48,7 +48,7 @@
         "message": "Striped background for low-priority messages"
     },
     "highestIcon.label": {
-        "message": "Icon for highest-priority messages:"
+        "message": "Icon for highest-priority messages (Use file:// prefix for local paths):"
     },
     "highIcon.label": {
         "message": "Icon for high-priority messages:"

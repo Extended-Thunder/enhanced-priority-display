@@ -19,7 +19,7 @@
   },
 
   "permissions": [
-    "storage", "theme"
+    "storage"
   ],
 
   "background": {
