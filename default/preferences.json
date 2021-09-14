@@ -1,11 +1,11 @@
 {
-  "Iconify": ["bool", true],
-  "StyleHigh": ["bool", true],
-  "StyleLow": ["bool", true],
-  "ShadeHigh": ["bool", true],
-  "ShadeLow": ["bool", true],
-  "HighestIcon": ["string", "chrome://EnhancedPriorityDisplay/ui/graphics/highest.gif"],
-  "HighIcon": ["string", "chrome://EnhancedPriorityDisplay/ui/graphics/high.gif"],
-  "LowIcon": ["string", "chrome://EnhancedPriorityDisplay/ui/graphics/low.gif"],
-  "LowestIcon": ["string", "chrome://EnhancedPriorityDisplay/ui/graphics/lowest.gif"]
+  "Iconify":    ["bool", true],
+  "StyleHigh":  ["bool", true],
+  "StyleLow":   ["bool", true],
+  "ShadeHigh":  ["bool", true],
+  "ShadeLow":   ["bool", true],
+  "HighestIcon":["string", "ui/graphics/highest.gif"],
+  "HighIcon":   ["string", "ui/graphics/high.gif"],
+  "LowIcon":    ["string", "ui/graphics/low.gif"],
+  "LowestIcon": ["string", "ui/graphics/lowest.gif"]
 }

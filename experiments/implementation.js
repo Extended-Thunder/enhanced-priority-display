@@ -55,17 +55,17 @@ Function to execute on load for any new messenger window.
 */
 function EnhancedPriorityDisplay(context, window) {
 
-  function gBP(pref) {
+  function getBoolPref(pref) {
     pref = `extensions.EnhancedPriorityDisplay.${pref}`;
     return Services.prefs.getBoolPref(pref, undefined);
   }
 
-  function gCP(pref) {
+  function getUriPref(pref) {
     pref = `extensions.EnhancedPriorityDisplay.${pref}`;
-    let value = Services.prefs.getCharPref(pref);
-    value = value.replace("chrome://EnhancedPriorityDisplay/",
-                          `moz-extension://${context.extension.uuid}/`);
-    return value;
+    let path = Services.prefs.getCharPref(pref);
+    path = path.replace("chrome://EnhancedPriorityDisplay/", "");
+    let uri = Services.io.newURI(path, null, context.extension.rootURI);
+    return uri.spec;
   }
 
   function createColumnHandler(colId, oldHandler) {
@@ -80,7 +80,7 @@ function EnhancedPriorityDisplay(context, window) {
       old: oldHandler,
 
       getCellText(row, col) {
-        if (isPriorityCol && gBP("Iconify"))
+        if (isPriorityCol && getBoolPref("Iconify"))
           return "";
         else if (columnHandler.old)
           return columnHandler.old.getCellText(row, col);
@@ -97,7 +97,7 @@ function EnhancedPriorityDisplay(context, window) {
 
       isString() {
         if (isPriorityCol)
-          return !gBP("Iconify");
+          return !getBoolPref("Iconify");
         else if (columnHandler.old)
           return columnHandler.old.isString();
         else
@@ -114,20 +114,20 @@ function EnhancedPriorityDisplay(context, window) {
         var properties = "";
         switch (columnHandler.getPriorityLevel(row)) {
           case "6":
-            if (gBP(which + "High"))
+            if (getBoolPref(which + "High"))
               properties = "enhanced-priority-display-highest";
             break;
           case "5":
-            if (gBP(which + "High"))
+            if (getBoolPref(which + "High"))
               properties = "enhanced-priority-display-high";
             break;
           case "4":
           case "3":
-            if (gBP(which + "Low"))
+            if (getBoolPref(which + "Low"))
               properties = "enhanced-priority-display-low";
             break;
           case "2":
-            if (gBP(which + "Low"))
+            if (getBoolPref(which + "Low"))
               properties = "enhanced-priority-display-lowest";
             break;
         }
@@ -156,19 +156,19 @@ function EnhancedPriorityDisplay(context, window) {
 
       getImageSrc(row, col) {
         if (isPriorityCol) {
-          if (!gBP("Iconify"))
+          if (!getBoolPref("Iconify"))
             return null;
 
           switch (columnHandler.getPriorityLevel(row)) {
             case "6":
-              return gCP("HighestIcon");
+              return getUriPref("HighestIcon");
             case "5":
-              return gCP("HighIcon");
+              return getUriPref("HighIcon");
             case "4":
             case "3":
-              return gCP("LowIcon");
+              return getUriPref("LowIcon");
             case "2":
-              return gCP("LowestIcon");
+              return getUriPref("LowestIcon");
             default:
               if (columnHandler.old)
                 return columnHandler.old.getImageSrc(row, col);
