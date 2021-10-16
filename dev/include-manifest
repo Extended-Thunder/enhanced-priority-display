@@ -1,0 +1,11 @@
+_locales
+_locales/*
+_locales/*/*
+default/preferences.json
+experiments
+experiments/*
+ui
+ui/*
+ui/*/*
+background.js
+manifest.json

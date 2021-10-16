@@ -1,0 +1,14 @@
+[
+  {
+    "namespace": "ep_display",
+    "functions": [
+      {
+        "name": "init",
+        "type": "function",
+        "desription": "Initialize legacy components of the extension.",
+        "async": true,
+        "parameters": []
+      }
+    ]
+  }
+]

@@ -1,48 +1,62 @@
 {
-    "name": "__MSG_appName__",
-    "version": "2.0.8",
-    "description": "__MSG_appDesc__",
-    "author": "Jonathan Kamens",
-    "default_locale": "en-US",
-    "homepage_url": "https://addons.thunderbird.net/thunderbird/addon/enhanced-priority-display/",
-        "options_ui": {
-            "page": "/content/options.html",
-            "open_in_tab": true
-        },
-        "experiment_apis":{
-            "epd_optAPI":{
-                "schema":"schema.json",
-                "parent":{
-                    "scopes":["addon_parent"],
-                    "script":"/content/options-implementation.js",
-                    "paths":[["epd_optAPI"]]
-                }
-            },
-            "epd_bgrndAPI":{
-                "schema":"schema.json",
-                "parent":{
-                    "scopes":["addon_parent"],
-                    "script":"/content/background-implementation.js",
-                    "paths":[["epd_bgrndAPI"]]
-                }
-            }
-        },
+  "name": "__MSG_appName__",
+  "version": "3.0.1",
+  "description": "__MSG_appDesc__",
+  "author": "Jonathan Kamens",
+  "default_locale": "en-US",
+  "homepage_url": "https://addons.thunderbird.net/thunderbird/addon/enhanced-priority-display/",
 
-        "background":{
-            "scripts":["background.js"]
-        },
+  "applications": {
+    "gecko": {
+      "id": "EnhancedPriorityDisplay@kamens.us",
+      "strict_min_version": "68.0a1",
+      "strict_max_version": "93.0"
+    }
+  },
 
-    "applications": {
-        "gecko": {
-            "id": "EnhancedPriorityDisplay@kamens.us",
-            "strict_min_version": "68.0a1",
-            "strict_max_version": "78.*"
-        }
+  "options_ui": {
+    "page": "ui/options.html",
+    "open_in_tab": false
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "web_accessible_resources": [
+    "default/preferences.json",
+    "experiments/*",
+    "ui/graphics/*"
+  ],
+
+  "experiment_apis": {
+    "ep_display": {
+      "schema": "experiments/schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/implementation.js",
+        "paths": [["ep_display"]]
+      }
     },
-    "icons": {
-        "48": "icon48.png",
-        "96": "icon96.png",
-        "200": "icon.png"
-    },
-    "manifest_version": 2
+    "ep_prefs": {
+      "schema": "experiments/prefSchema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "experiments/prefImplementation.js",
+        "paths": [["ep_prefs"]]
+      }
+    }
+  },
+
+  "icons": {
+    "48": "ui/graphics/icon48.png",
+    "96": "ui/graphics/icon96.png",
+    "200": "ui/graphics/icon.png"
+  },
+
+  "manifest_version": 2
 }
