@@ -122,6 +122,7 @@ function EnhancedPriorityDisplay(context, window) {
               properties = "enhanced-priority-display-high";
             break;
           case "4":
+            break;
           case "3":
             if (getBoolPref(which + "Low"))
               properties = "enhanced-priority-display-low";
