@@ -9,6 +9,7 @@ Author: Jonathan Kamens <[jik+epd@kamens.us](
 mailto:jik+epd@kamens.us)>
 
 Copyright (c) 2012,2013,2015 Jonathan Kamens.
+Copyright (c) 2021,2022 Extended Thunder Inc.
 
 Released under the terms of the Mozilla Public License, v. 2.0. The
 MPL can be found in the file [LICENSE](LICENSE).

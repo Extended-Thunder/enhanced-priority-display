@@ -20,6 +20,9 @@
     "copyright.label": {
         "message": "Copyright \u00a9 2012,2013,2015 Jonathan Kamens"
     },
+    "copyright2.label": {
+        "message": "Copyright \u00a9 2021,2022 Extended Thunder Inc."
+    },
     "license.label": {
         "message": "Released under the Mozilla Public License, version 2.0"
     },
