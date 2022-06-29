@@ -10,7 +10,7 @@
     "gecko": {
       "id": "EnhancedPriorityDisplay@kamens.us",
       "strict_min_version": "68.0a1",
-      "strict_max_version": "93.0"
+      "strict_max_version": "102.*"
     }
   },
 
