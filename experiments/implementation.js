@@ -1,13 +1,11 @@
-/* Copyright (c) 2021, Extended Thunder Inc.
+/* Copyright (c) 2021,2022 Extended Thunder Inc.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 var { utils: Cu, classes: Cc, interfaces: Ci } = Components;
-var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
 var { ExtensionSupport } = ChromeUtils.import("resource:///modules/ExtensionSupport.jsm");
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { AddonManager } = ChromeUtils.import("resource://gre/modules/AddonManager.jsm");
 
 var ep_display = class extends ExtensionCommon.ExtensionAPI {
