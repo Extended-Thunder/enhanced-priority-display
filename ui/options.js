@@ -106,6 +106,7 @@ var EPDOptions = {
     "shade-low-checkbox": "ShadeLow",
     "highest-icon-textbox": "HighestIcon",
     "high-icon-textbox": "HighIcon",
+    "norm-icon-textbox": "NormIcon",
     "low-icon-textbox": "LowIcon",
     "lowest-icon-textbox": "LowestIcon"
   },
