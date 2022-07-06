@@ -120,6 +120,8 @@ function EnhancedPriorityDisplay(context, window) {
               properties = "enhanced-priority-display-high";
             break;
           case "4":
+            if (getBoolPref(which + "Normal"))
+              properties = "enhanced-priority-display-normal";
             break;
           case "3":
             if (getBoolPref(which + "Low"))
@@ -164,6 +166,7 @@ function EnhancedPriorityDisplay(context, window) {
             case "5":
               return getUriPref("HighIcon");
             case "4":
+              return getUriPref("NormIcon");
             case "3":
               return getUriPref("LowIcon");
             case "2":
