@@ -56,6 +56,9 @@
     "highIcon.label": {
         "message": "Icon for high-priority messages:"
     },
+    "normIcon.label": {
+        "message": "Icon for normal-priority messages:"
+    },
     "lowIcon.label": {
         "message": "Icon for low-priority messages:"
     },
