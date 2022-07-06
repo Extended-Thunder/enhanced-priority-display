@@ -47,6 +47,9 @@
     "highIcon.label": {
         "message": "\u9ad8\u4f18\u5148\u7ea7\u6d88\u606f\u7684\u56fe\u6807\uff1a"
     },
+    "normIcon.label": {
+        "message": "\u6b63\u5e38\u4f18\u5148\u6d88\u606f\u7684\u56fe\u6807\uff1a"
+    },
     "lowIcon.label": {
         "message": "\u4f4e\u4f18\u5148\u7ea7\u6d88\u606f\u7684\u56fe\u6807\uff1a"
     },
