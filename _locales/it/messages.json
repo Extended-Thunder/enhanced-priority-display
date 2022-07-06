@@ -47,6 +47,9 @@
     "highIcon.label": {
         "message": "Icona per i messaggi a priorit\u00e0 alta"
     },
+    "normIcon.label": {
+        "message": "Icona per i messaggi a priorit\u00e0 normale"
+    },
     "lowIcon.label": {
         "message": "Icona per i messaggi a priorit\u00e0 bassa"
     },
