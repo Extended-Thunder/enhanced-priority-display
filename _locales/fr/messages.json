@@ -47,6 +47,9 @@
     "highIcon.label": {
         "message": "Ic\u00f4ne pour les messages priorit\u00e9 haute :"
     },
+    "normIcon.label": {
+        "message": "Ic\u00f4ne pour les messages priorit\u00e9 normale :"
+    },
     "lowIcon.label": {
         "message": "Ic\u00f4ne pour les messages priorit\u00e9 basse :"
     },
