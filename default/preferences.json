@@ -6,6 +6,7 @@
   "ShadeLow":   ["bool", true],
   "HighestIcon":["string", "ui/graphics/highest.gif"],
   "HighIcon":   ["string", "ui/graphics/high.gif"],
+  "NormIcon":   ["string", "ui/graphics/normal.gif"],
   "LowIcon":    ["string", "ui/graphics/low.gif"],
   "LowestIcon": ["string", "ui/graphics/lowest.gif"]
 }
