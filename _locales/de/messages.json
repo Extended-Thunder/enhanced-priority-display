@@ -47,6 +47,9 @@
     "highIcon.label": {
         "message": "Icon f\u00fcr Hohe Priorit\u00e4t-Benachrichtigungen:"
     },
+    "normIcon.label": {
+        "message": "Icon f\u00fcr Normal Priorit\u00e4t-Benachrichtigungen:"
+    },
     "lowIcon.label": {
         "message": "Icon f\u00fcr Niedrige Priorit\u00e4t-Benachrichtigungen:"
     },
