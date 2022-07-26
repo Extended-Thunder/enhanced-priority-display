@@ -163,12 +163,11 @@ function EnhancedPriorityDisplay(context, window) {
               return getUriPref("HighestIcon");
             case "5":
               return getUriPref("HighIcon");
-            case "4":
             case "3":
               return getUriPref("LowIcon");
             case "2":
               return getUriPref("LowestIcon");
-            default:
+            default: // also "4", which is normal priority
               if (columnHandler.old)
                 return columnHandler.old.getImageSrc(row, col);
               return null;
