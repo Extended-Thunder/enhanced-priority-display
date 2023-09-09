@@ -1,6 +1,8 @@
 Enhanced Priority Display Thunderbird / SeaMonkey add-on
 ========================================================
 
+**About Thunderbird 115+ support:** The Thunderbird internal implementation of the message list and what ability there will be for add-on maintainers to customize it are still in flux. A decision about porting this add-on to TB115+ will be made once they settle down.
+
 AMO home page, from which the add-on can be downloaded and installed:
 [https://addons.mozilla.org/thunderbird/addon/enhanced-priority-display/](
 https://addons.mozilla.org/thunderbird/addon/enhanced-priority-display/)
